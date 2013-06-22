@@ -59,5 +59,6 @@ grails.project.dependency.resolution = {
         runtime ":database-migration:1.3.2"
 
         compile ':cache:1.0.1'
+		compile ':twitter-bootstrap:2.3.2'
     }
 }
