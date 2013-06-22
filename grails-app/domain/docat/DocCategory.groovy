@@ -1,6 +1,6 @@
 package docat
 
-class Category {
+class DocCategory {
 
 	String name
 	

@@ -1,6 +1,6 @@
 package docat
 
-class CategoryController {
+class DocCategoryController {
 
 	static scaffold = true
 	

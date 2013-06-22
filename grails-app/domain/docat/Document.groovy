@@ -3,7 +3,7 @@ package docat
 class Document {
 	
 	String name
-	Category category
+	DocCategory category
 	
 
 	static constraints = {
