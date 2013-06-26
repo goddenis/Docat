@@ -2,6 +2,9 @@ import java.util.concurrent.ForkJoinPool;
 
 import docat.DocCategory
 import docat.Document
+import docat.Role;
+import docat.User
+import docat.UserRole
 
 class BootStrap {
 
@@ -34,6 +37,13 @@ class BootStrap {
 				category1.errors.allErrors.each{ it -> println "Error : ${it} " }
 			}
 		}
+		def adminRole = new Role(authority: 'ROLE_ADMIN').save(flush: true)
+		def userRole = new Role(authority: 'USER_ROLE' ).save(flush: true)
+
+		def testUser = new User(username: "goddenis", enabled: true, password:'1234' )
+		testUser.save(flush: true)
+		
+		UserRole.create testUser ,adminRole ,true
 	}
 	def destroy = {
 	}
