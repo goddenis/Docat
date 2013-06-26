@@ -1,12 +1,10 @@
-<%@ page import="docat.DocCategory" %>
+<%@ page import="docat.DocCategory"%>
 
 
 
-<div class="fieldcontain ${hasErrors(bean: docCategoryInstance, field: 'name', 'error')} ">
-	<label for="name">
-		<g:message code="docCategory.name.label" default="Name" />
-		
-	</label>
-	<g:textField name="name" value="${docCategoryInstance?.name}"/>
+<div
+	class="fieldcontain ${hasErrors(bean: docCategoryInstance, field: 'name', 'error')} ">
+	<label for="name"> Имя </label>
+	<g:textField name="name" value="${docCategoryInstance?.name}" />
 </div>
 

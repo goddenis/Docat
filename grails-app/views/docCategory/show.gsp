@@ -1,45 +1,53 @@
 
-<%@ page import="docat.DocCategory" %>
+<%@ page import="docat.DocCategory"%>
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta name="layout" content="main">
-		<g:set var="entityName" value="${message(code: 'docCategory.label', default: 'DocCategory')}" />
-		<title><g:message code="default.show.label" args="[entityName]" /></title>
-	</head>
-	<body>
-		<a href="#show-docCategory" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
-		<div class="nav" role="navigation">
-			<ul>
-				<li><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></li>
-				<li><g:link class="list" action="list"><g:message code="default.list.label" args="[entityName]" /></g:link></li>
-				<li><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></li>
-			</ul>
+<head>
+<meta name="layout" content="main">
+<title>"ДокАТ : Категория подробно"</title>
+</head>
+<body>
+	<div class="row-fluid">
+		<div class="span3">
+			<div class="well">
+				<ul>
+					<li><a class="home" href="${createLink(uri: '/')}">Home</a></li>
+					<li><g:link class="list" action="list">Список категорий</g:link></li>
+					<li><g:link class="create" action="create">Создать новую категорию</g:link></li>
+				</ul>
+			</div>
 		</div>
-		<div id="show-docCategory" class="content scaffold-show" role="main">
-			<h1><g:message code="default.show.label" args="[entityName]" /></h1>
+
+		<div class="span9">
+			<h1>Категория подробно</h1>
 			<g:if test="${flash.message}">
-			<div class="message" role="status">${flash.message}</div>
+				<div class="message" role="status">
+					${flash.message}
+				</div>
 			</g:if>
-			<ol class="property-list docCategory">
-			
+			<ul class="property-list docCategory">
+
 				<g:if test="${docCategoryInstance?.name}">
-				<li class="fieldcontain">
-					<span id="name-label" class="property-label"><g:message code="docCategory.name.label" default="Name" /></span>
-					
-						<span class="property-value" aria-labelledby="name-label"><g:fieldValue bean="${docCategoryInstance}" field="name"/></span>
-					
-				</li>
+					<li><span>Имя</span> <span><g:fieldValue
+								bean="${docCategoryInstance}" field="name" /></span></li>
 				</g:if>
-			
-			</ol>
+
+			</ul>
 			<g:form>
 				<fieldset class="buttons">
 					<g:hiddenField name="id" value="${docCategoryInstance?.id}" />
-					<g:link class="edit" action="edit" id="${docCategoryInstance?.id}"><g:message code="default.button.edit.label" default="Edit" /></g:link>
-					<g:actionSubmit class="delete" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" />
+					<g:link class="btn btn-primary" action="edit"
+						id="${docCategoryInstance?.id}">
+						Редактировать
+					</g:link>
+					<g:actionSubmit class="btn" action="delete" value="Удалить"
+						onclick="return confirm('Вы уверены ?');" />
 				</fieldset>
 			</g:form>
+
+
 		</div>
-	</body>
+	</div>
+
+</body>
 </html>
