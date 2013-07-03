@@ -1,5 +1,7 @@
 package docat
 
+import grails.plugins.springsecurity.Secured;
+
 import org.springframework.dao.DataIntegrityViolationException
 
 class DocCategoryController {
@@ -15,10 +17,12 @@ class DocCategoryController {
         [docCategoryInstanceList: DocCategory.list(params), docCategoryInstanceTotal: DocCategory.count()]
     }
 
+	@Secured(['ROLE_ADMIN'])
     def create() {
         [docCategoryInstance: new DocCategory(params)]
     }
 
+	@Secured(['ROLE_ADMIN'])
     def save() {
         def docCategoryInstance = new DocCategory(params)
         if (!docCategoryInstance.save(flush: true)) {
@@ -40,7 +44,7 @@ class DocCategoryController {
 
         [docCategoryInstance: docCategoryInstance]
     }
-
+	@Secured(['ROLE_ADMIN'])
     def edit(Long id) {
         def docCategoryInstance = DocCategory.get(id)
         if (!docCategoryInstance) {
@@ -52,6 +56,7 @@ class DocCategoryController {
         [docCategoryInstance: docCategoryInstance]
     }
 
+	@Secured(['ROLE_ADMIN'])
     def update(Long id, Long version) {
         def docCategoryInstance = DocCategory.get(id)
         if (!docCategoryInstance) {
@@ -81,6 +86,7 @@ class DocCategoryController {
         redirect(action: "show", id: docCategoryInstance.id)
     }
 
+	@Secured(['ROLE_ADMIN'])
     def delete(Long id) {
         def docCategoryInstance = DocCategory.get(id)
         if (!docCategoryInstance) {

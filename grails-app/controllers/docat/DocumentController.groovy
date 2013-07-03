@@ -1,5 +1,7 @@
 package docat
 
+import grails.plugins.springsecurity.Secured;
+
 import org.springframework.dao.DataIntegrityViolationException
 
 class DocumentController {
@@ -14,11 +16,13 @@ class DocumentController {
         params.max = Math.min(max ?: 10, 100)
         [documentInstanceList: Document.list(params), documentInstanceTotal: Document.count()]
     }
-
+	
+	@Secured(['ROLE_ADMIN']) 
     def create() {
         [documentInstance: new Document(params)]
     }
 
+	@Secured(['ROLE_ADMIN'])
     def save() {
         def documentInstance = new Document(params)
         if (!documentInstance.save(flush: true)) {
@@ -41,6 +45,7 @@ class DocumentController {
         [documentInstance: documentInstance]
     }
 
+	@Secured(['ROLE_ADMIN'])
     def edit(Long id) {
         def documentInstance = Document.get(id)
         if (!documentInstance) {
@@ -52,6 +57,7 @@ class DocumentController {
         [documentInstance: documentInstance]
     }
 
+	@Secured(['ROLE_ADMIN'])
     def update(Long id, Long version) {
         def documentInstance = Document.get(id)
         if (!documentInstance) {
@@ -81,6 +87,7 @@ class DocumentController {
         redirect(action: "show", id: documentInstance.id)
     }
 
+	@Secured(['ROLE_ADMIN'])
     def delete(Long id) {
         def documentInstance = Document.get(id)
         if (!documentInstance) {
