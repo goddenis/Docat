@@ -3,6 +3,7 @@
 <head>
 <meta name="layout" content="main" />
 <title>Добро пожаловать в докат</title>
+<r:require module="pdf_viwer"/>
 
 </head>
 <body>
@@ -36,28 +37,46 @@
 
 		<div class="span9">
 			<div class="hero-unit">
-				<h1>Добро пожаловать в ДокАТ</h1>
-				<p>ДокАт -это справочная система по научно технической
-					документайии. Кроме того мы предлогаем набор инструментов для
-					обсуждения НТД и храненая заметок по часто используимым документам</p>
-				<p>
-					<g:link class="btn btn-primary bln-large" url="">Узнать больше</g:link>
-				</p>
-			</div>
-			<div>
-				<h2>Available Controllers:</h2>
-				<ul>
-					<g:each var="c"
-						in="${grailsApplication.controllerClasses.sort { it.fullName } }">
-						<li class="controller"><g:link
-								controller="${c.logicalPropertyName}">
-								${c.fullName}
-							</g:link></li>
-					</g:each>
-				</ul>
+				<h1>Добро пожаловать во Viewer</h1>
 			</div>
 		</div>
+	
+	
 
+		<r:script disposition="head" >
+		'use strict';
+
+  PDFJS.workerSrc = '/Docat/js/pdf_viwer/pdf.js';
+//
+// Fetch the PDF document from the URL using promises
+//
+PDFJS.getDocument('/Docat/helloworld2.pdf').then(function(pdf) {
+  // Using promise to fetch the page
+  pdf.getPage(1).then(function(page) {
+    var scale = 1.5;
+    var viewport = page.getViewport(scale);
+
+    //
+    // Prepare canvas using PDF page dimensions
+    //
+    var canvas = document.getElementById('the-canvas');
+    var context = canvas.getContext('2d');
+    canvas.height = viewport.height;
+    canvas.width = viewport.width;
+
+    //
+    // Render PDF page into canvas context
+    //
+    var renderContext = {
+      canvasContext: context,
+      viewport: viewport
+    };
+    page.render(renderContext);
+  });
+});
+		</r:script>
+		<canvas id="the-canvas" style="border: 1px solid black;" />
+	
 	</div>
 </body>
 </html>
