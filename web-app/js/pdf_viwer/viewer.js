@@ -18,9 +18,12 @@
 /* globals PDFFindController, ProgressBar, getFileName, CustomStyle */
 /* globals getOutputScale, TextLayerBuilder */
 
+function(doc_url,worker_src){
+
+
 'use strict';
 
-var DEFAULT_URL = 'compressed.tracemonkey-pldi-09.pdf';
+var DEFAULT_URL = doc_url;
 var DEFAULT_SCALE = 'auto';
 var DEFAULT_SCALE_DELTA = 1.1;
 var UNKNOWN_SCALE = 0;
@@ -46,7 +49,7 @@ var FindStates = {
   FIND_PENDING: 3
 };
 
-  PDFJS.workerSrc = '../build/pdf.js';
+  PDFJS.workerSrc = worker_src;
 
 var mozL10n = document.mozL10n || document.webL10n;
 
@@ -4041,3 +4044,4 @@ window.addEventListener('afterprint', function afterPrint(evt) {
 })();
 
 
+}
