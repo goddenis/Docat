@@ -1,7 +1,7 @@
 package docat
 
 import grails.plugins.springsecurity.Secured;
-
+import groovyx.net.http.HTTPBuilder
 import org.springframework.dao.DataIntegrityViolationException
 
 class DocumentController {
@@ -19,13 +19,16 @@ class DocumentController {
 
     @Secured(['ROLE_ADMIN'])
     def upload(){
-        def f =request.getFile(new UUID().toString())
-        if (f.empty){
+        def f =request.getFile('myFile')
+        if (f?.empty){
             flash.message = 'file cannot be empty'
             render(view: 'uploadForm')
             return
         }
-        f.transferTo(new File('/Docat/docs/myfile.txt'))
+        f.transferTo(new File('C:\\Docat\\docs\\'+f.getOriginalFilename()))
+
+        def http = new HTTPBuilder()
+
         response.sendError(200, 'Done')
     }
 
