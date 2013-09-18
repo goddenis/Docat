@@ -16,7 +16,19 @@ class DocumentController {
         params.max = Math.min(max ?: 10, 100)
         [documentInstanceList: Document.list(params), documentInstanceTotal: Document.count()]
     }
-	
+
+    @Secured(['ROLE_ADMIN'])
+    def upload(){
+        def f =request.getFile(new UUID().toString())
+        if (f.empty){
+            flash.message = 'file cannot be empty'
+            render(view: 'uploadForm')
+            return
+        }
+        f.transferTo(new File('/Docat/docs/myfile.txt'))
+        response.sendError(200, 'Done')
+    }
+
 	@Secured(['ROLE_ADMIN']) 
     def create() {
         [documentInstance: new Document(params)]

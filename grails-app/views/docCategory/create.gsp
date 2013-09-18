@@ -40,6 +40,7 @@
 					<g:submitButton name="create" class="btn btn-primary"
 						value="Сохранить" />
 				</fieldset>
+
 			</g:form>
 
 		</div>

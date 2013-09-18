@@ -46,6 +46,10 @@
 						onclick="return confirm('Вы уверены');" />
 				</fieldset>
 			</g:form>
+            <g:uploadForm action="upload">
+                <input type="file" name="myFile" />
+                <input type="submit" />
+            </g:uploadForm>
 		</div>
 </body>
 </html>
