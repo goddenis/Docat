@@ -25,9 +25,10 @@ class DocumentController {
             render(view: 'uploadForm')
             return
         }
-        f.transferTo(new File('C:\\Docat\\docs\\'+f.getOriginalFilename()))
+        def newFileName = UUID.randomUUID().toString()
+        f.transferTo(new File('C:\\Docat\\docs\\'+newFileName+'.pdf'))
 
-        def http = new HTTPBuilder()
+        SearchUtil.indexFile('C:\\Docat\\docs\\'+newFileName+'.pdf')
 
         response.sendError(200, 'Done')
     }
