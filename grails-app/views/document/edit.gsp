@@ -33,23 +33,21 @@
 					</g:eachError>
 				</ul>
 			</g:hasErrors>
-			<g:form method="post">
+			<g:uploadForm method="post" enctype="multipart/form-data">
 				<g:hiddenField name="id" value="${documentInstance?.id}" />
 				<g:hiddenField name="version" value="${documentInstance?.version}" />
 				<fieldset class="form">
 					<g:render template="form" />
 				</fieldset>
+                    <input type="file" name="file" />
 				<fieldset class="buttons">
 					<g:actionSubmit class="btn btn-primary" action="update" value="Сохранить" />
 					<g:actionSubmit class="btn" action="delete" value="Удалить"
 						formnovalidate=""
 						onclick="return confirm('Вы уверены');" />
 				</fieldset>
-			</g:form>
-            <g:uploadForm action="upload">
-                <input type="file" name="myFile" />
-                <input type="submit" />
-            </g:uploadForm>
+			</g:uploadForm>
+
 		</div>
 </body>
 </html>

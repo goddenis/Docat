@@ -61,7 +61,7 @@ public class SearchUtil {
         def http = new HTTPBuilder(url)
         http.request(Method.POST) { req ->
             uri.path = extractPath
-            uri.query=["literal.id":2,coomit:true]
+            uri.query=["literal.id":file.getName(),commit:true]
             requestContentType: "binary/octet-stream"
 
 

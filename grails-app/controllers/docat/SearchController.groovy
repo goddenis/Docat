@@ -5,7 +5,11 @@ import docat.SearchUtil
 class SearchController {
 
     def index() {
-        def sss =  docat.SearchUtil.search()
-        def i = 1
+
+    }
+
+    def test (){
+        def rec = grailsApplication.config.devPropereties
+        render("Config {\n${rec}\n ${grailsApplication.config.devPropereties.foo} \n ${grailsApplication.config.devPropereties.bar}" )
     }
 }

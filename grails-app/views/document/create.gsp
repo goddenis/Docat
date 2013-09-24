@@ -33,15 +33,16 @@
 					</g:eachError>
 				</ul>
 			</g:hasErrors>
-			<g:form action="save">
+			<g:uploadForm action="save"  enctype="multipart/form-data">
 				<fieldset class="form">
 					<g:render template="form" />
+                    <input type="file" name="file" />
 				</fieldset>
 				<fieldset class="buttons">
 					<g:submitButton name="create" class="btn btn-primary"
 						value="Создать" />
 				</fieldset>
-			</g:form>
+			</g:uploadForm>
 		</div>
 	</div>
 </body>

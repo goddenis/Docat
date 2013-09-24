@@ -7,8 +7,9 @@ import org.springframework.dao.DataIntegrityViolationException
 class DocumentController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
-
+    def processingService
     def index() {
+        groovy.xml.MarkupBuilder
         redirect(action: "list", params: params)
     }
 
@@ -17,34 +18,28 @@ class DocumentController {
         [documentInstanceList: Document.list(params), documentInstanceTotal: Document.count()]
     }
 
-    @Secured(['ROLE_ADMIN'])
-    def upload(){
-        def f =request.getFile('myFile')
-        if (f?.empty){
-            flash.message = 'file cannot be empty'
-            render(view: 'uploadForm')
-            return
-        }
-        def newFileName = UUID.randomUUID().toString()
-        f.transferTo(new File('C:\\Docat\\docs\\'+newFileName+'.pdf'))
-
-        SearchUtil.indexFile('C:\\Docat\\docs\\'+newFileName+'.pdf')
-
-        response.sendError(200, 'Done')
-    }
-
-	@Secured(['ROLE_ADMIN']) 
+	@Secured(['ROLE_ADMIN'])
     def create() {
         [documentInstance: new Document(params)]
     }
 
 	@Secured(['ROLE_ADMIN'])
     def save() {
-        def documentInstance = new Document(params)
+        def documentInstance = new Document()
+        bindData(documentInstance,params,['file'])
+        def uploadedFile = request.getFile('file')
+
+        if(!uploadedFile.empty){
+            def newFilename = processingService.process(uploadedFile)
+            documentInstance.attachedFileName = newFilename
+        }
+
         if (!documentInstance.save(flush: true)) {
             render(view: "create", model: [documentInstance: documentInstance])
             return
         }
+
+
 
         flash.message = message(code: 'default.created.message', args: [message(code: 'document.label', default: 'Document'), documentInstance.id])
         redirect(action: "show", id: documentInstance.id)
@@ -76,6 +71,7 @@ class DocumentController {
 	@Secured(['ROLE_ADMIN'])
     def update(Long id, Long version) {
         def documentInstance = Document.get(id)
+
         if (!documentInstance) {
             flash.message = message(code: 'default.not.found.message', args: [message(code: 'document.label', default: 'Document'), id])
             redirect(action: "list")
@@ -93,6 +89,13 @@ class DocumentController {
         }
 
         documentInstance.properties = params
+
+        def uploadedFile = request.getFile('file')
+
+        if(!uploadedFile.empty){
+            def newFilename = processingService.process(uploadedFile)
+            documentInstance.attachedFileName = newFilename
+        }
 
         if (!documentInstance.save(flush: true)) {
             render(view: "edit", model: [documentInstance: documentInstance])
