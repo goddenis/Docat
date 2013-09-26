@@ -20,16 +20,17 @@ class BootStrap {
         }
 
 
-        def document1 = new Document(name: 'doc 1', category: category1, attachedFileName: "testdoc1")
-
-        if (!document1.save()) {
-            document1.errors.allErrors.each { it -> println "error :${it}" }
-        }
-
-        def document2 = new Document(name: 'doc 2', category: category2, attachedFileName: "testdoc2")
-
-        if (!document2.save()) {
-            document2.errors.allErrors.each { it -> println "error :${it}" }
+        def documents = [new Document(name: 'Grails', category: category1, attachedFileName: "testdoc1"),
+                new Document(name: 'solar 4', category: category2, attachedFileName: "testdoc2"),
+                new Document(name: 'Apache Solr 4 (indexed)', category: category2, attachedFileName: "testdoc2"),
+                new Document(name: 'Apache Solr 4 reference guide (indexed)', category: category2, attachedFileName: "1f160c1a-a38b-404f-a68c-d7992cce5da5"),
+                new Document(name: 'Data Structures and Abstractions in Java', category: category2, attachedFileName: "4d4dc6de-298c-49c9-accb-c46bdbfbf468"),
+                new Document(name: 'Apache Solr 4 reference guide (indexed)(duble)', category: category2, attachedFileName: "5fa8a344-9d52-4587-89d1-18c046453b54"),
+                new Document(name: 'OSGi and Apache Felix', category: category2, attachedFileName: "6ce95e78-c90e-4278-b02c-62911e5614c3")]
+        documents.each {
+            if(!it.save()){
+                it.errors.allErrors.each {v -> println "error :${v}" }
+            }
         }
         for (int i = 3; i < 15; i++) {
             category1 = new DocCategory(name: "cat: ${i}")

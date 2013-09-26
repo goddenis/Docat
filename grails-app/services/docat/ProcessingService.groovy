@@ -17,15 +17,15 @@ class ProcessingService {
             throw new Exception("Store not aveible")
         }
 
-        file.transferTo(new File("${conf.storeFolder}\\${newFileName}.pdf"))
+        file.transferTo(new File("${conf.storeFolder}\\${newFileName}"))
 
-        indexFile(new File("${conf.storeFolder}\\${newFileName}.pdf").getAbsolutePath())
+        indexFile(new File("${conf.storeFolder}\\${newFileName}").getAbsolutePath())
         return newFileName
     }
 
      byte[] readFile (name){
         def conf = grailsApplication.config.devProperties
-        return new File("${conf.storeFolder}\\${name}.pdf").bytes
+        return new File("${conf.storeFolder}\\${name}").bytes
     }
 
     private def storeAveable(){
@@ -38,15 +38,19 @@ class ProcessingService {
         return true
     }
 
-    public def search() {
-        def devPrps= grailsApplication.config.devProperties
+    public def search(queryString) {
+        def devPrps= grailsApplication?.config?.devProperties
+        if (!queryString || !devPrps){
+            return null
+        }
+
         try {
             def ret = null
             def http = new HTTPBuilder(devPrps.searchUrl)
 
             http.request(Method.GET, ContentType.JSON) {
                 uri.path = devPrps.searchPath
-                uri.query = [q: "*", wt: "json", indent: "true"]
+                uri.query = [q: queryString, rows:100, wt: "json", fl:"id,content_type", indent: "true"]
                 response.success = { resp, reader ->
                     println "response status: ${resp.statusLine}"
                     println 'Headers: -----------'

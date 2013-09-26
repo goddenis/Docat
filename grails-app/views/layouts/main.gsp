@@ -59,6 +59,11 @@ body {
 							<g:if test="${controllerName == 'docCategory'}"> class="active"</g:if>><g:link
 								controller="docCategory" action="list"> Документы по категориям </g:link>
 						</li>
+                        <li>
+                            <g:form class="form-search" controller="search" oninput="submit">
+                                <g:textField name="query" class="input-medium search-query" ></g:textField>
+                            </g:form>
+                        </li>
 					</ul>
 				</div>
 				<!--/.nav-collapse -->

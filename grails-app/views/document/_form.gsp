@@ -14,7 +14,3 @@
 	<label for="name">Имя</label>
 	<g:textField name="name" value="${documentInstance?.name}"/>
 </div>
-
-%{--<g:uploadForm >--}%
-    %{--<input type="file" name="post.file"/>--}%
-%{--</g:uploadForm>--}%

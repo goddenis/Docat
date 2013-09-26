@@ -64,7 +64,7 @@ class DocumentController {
 
 
             if (fileBytes?.length > 0) {
-                forceDownload(filename:"sdd.pdf", contentType:"application/octet-stream", contentLength: fileBytes.length, fileBytes)
+                forceDownload(filename:"${docInstance.name.replace(' ','_')}.pdf", contentType:"application/octet-stream", contentLength: fileBytes.length, fileBytes)
                 //render(contentType: "application/octet-stream",header("Content-disposition", "filename=${docInstance.attachedFileName}"), outputStrem:fileBytes )
 
             }
