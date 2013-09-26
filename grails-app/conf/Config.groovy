@@ -101,5 +101,8 @@ grails.plugins.springsecurity.authority.className = 'docat.Role'
 devProperties {
     userHome = "${userHome}"
     storeFolder = "${userHome}\\AppStore"
+    searchUrl = "http://192.168.33.113:8080"
+    searchPath = "/solr/collection1/select"
+    extractPath = "/solr/update/extract"
 }
 

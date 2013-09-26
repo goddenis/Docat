@@ -8,8 +8,8 @@ class DocumentController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
     def processingService
+
     def index() {
-        groovy.xml.MarkupBuilder
         redirect(action: "list", params: params)
     }
 
@@ -18,18 +18,18 @@ class DocumentController {
         [documentInstanceList: Document.list(params), documentInstanceTotal: Document.count()]
     }
 
-	@Secured(['ROLE_ADMIN'])
+    @Secured(['ROLE_ADMIN'])
     def create() {
         [documentInstance: new Document(params)]
     }
 
-	@Secured(['ROLE_ADMIN'])
+    @Secured(['ROLE_ADMIN'])
     def save() {
         def documentInstance = new Document()
-        bindData(documentInstance,params,['file'])
+        bindData(documentInstance, params, ['file'])
         def uploadedFile = request.getFile('file')
 
-        if(!uploadedFile.empty){
+        if (!uploadedFile.empty) {
             def newFilename = processingService.process(uploadedFile)
             documentInstance.attachedFileName = newFilename
         }
@@ -41,14 +41,14 @@ class DocumentController {
 
 
 
-        flash.message = message(code: 'default.created.message', args: [message(code: 'document.label', default: 'Document'), documentInstance.id])
+        flash.message = "Документ ${documentInstance.id}."
         redirect(action: "show", id: documentInstance.id)
     }
 
     def show(Long id) {
         def documentInstance = Document.get(id)
         if (!documentInstance) {
-            flash.message = message(code: 'default.not.found.message', args: [message(code: 'document.label', default: 'Document'), id])
+            flash.message = "Документ ${id} не найден"
             redirect(action: "list")
             return
         }
@@ -56,11 +56,28 @@ class DocumentController {
         [documentInstance: documentInstance]
     }
 
-	@Secured(['ROLE_ADMIN'])
+    def download(Long id) {
+        def docInstance = Document.get(id)
+
+        if (docInstance?.attachedFileName) {
+            def fileBytes = processingService.readFile(docInstance.attachedFileName)
+
+
+            if (fileBytes?.length > 0) {
+                forceDownload(filename:"sdd.pdf", contentType:"application/octet-stream", contentLength: fileBytes.length, fileBytes)
+                //render(contentType: "application/octet-stream",header("Content-disposition", "filename=${docInstance.attachedFileName}"), outputStrem:fileBytes )
+
+            }
+        } else {
+            render(action: "show", id: docInstance.id)
+        }
+    }
+
+    @Secured(['ROLE_ADMIN'])
     def edit(Long id) {
         def documentInstance = Document.get(id)
         if (!documentInstance) {
-            flash.message = message(code: 'default.not.found.message', args: [message(code: 'document.label', default: 'Document'), id])
+            flash.message ="Документ ${id} не найден"
             redirect(action: "list")
             return
         }
@@ -68,12 +85,12 @@ class DocumentController {
         [documentInstance: documentInstance]
     }
 
-	@Secured(['ROLE_ADMIN'])
+    @Secured(['ROLE_ADMIN'])
     def update(Long id, Long version) {
         def documentInstance = Document.get(id)
 
         if (!documentInstance) {
-            flash.message = message(code: 'default.not.found.message', args: [message(code: 'document.label', default: 'Document'), id])
+            flash.message = "Документ ${id} не найден"
             redirect(action: "list")
             return
         }
@@ -81,8 +98,7 @@ class DocumentController {
         if (version != null) {
             if (documentInstance.version > version) {
                 documentInstance.errors.rejectValue("version", "default.optimistic.locking.failure",
-                          [message(code: 'document.label', default: 'Document')] as Object[],
-                          "Another user has updated this Document while you were editing")
+                        "Another user has updated this Document while you were editing")
                 render(view: "edit", model: [documentInstance: documentInstance])
                 return
             }
@@ -92,7 +108,7 @@ class DocumentController {
 
         def uploadedFile = request.getFile('file')
 
-        if(!uploadedFile.empty){
+        if (!uploadedFile.empty) {
             def newFilename = processingService.process(uploadedFile)
             documentInstance.attachedFileName = newFilename
         }
@@ -102,26 +118,26 @@ class DocumentController {
             return
         }
 
-        flash.message = message(code: 'default.updated.message', args: [message(code: 'document.label', default: 'Document'), documentInstance.id])
+        flash.message ="Документ ${documentInstance.id} Обновлен"
         redirect(action: "show", id: documentInstance.id)
     }
 
-	@Secured(['ROLE_ADMIN'])
+    @Secured(['ROLE_ADMIN'])
     def delete(Long id) {
         def documentInstance = Document.get(id)
         if (!documentInstance) {
-            flash.message = message(code: 'default.not.found.message', args: [message(code: 'document.label', default: 'Document'), id])
+            flash.message ="Документ ${id} не найден"
             redirect(action: "list")
             return
         }
 
         try {
             documentInstance.delete(flush: true)
-            flash.message = message(code: 'default.deleted.message', args: [message(code: 'document.label', default: 'Document'), id])
+            flash.message ="Документ ${id} удален"
             redirect(action: "list")
         }
         catch (DataIntegrityViolationException e) {
-            flash.message = message(code: 'default.not.deleted.message', args: [message(code: 'document.label', default: 'Document'), id])
+            flash.message = "Ошибка документ ${id} не удален. \n${e.message}"
             redirect(action: "show", id: id)
         }
     }
