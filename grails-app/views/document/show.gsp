@@ -69,6 +69,12 @@
             </fieldset>
         </g:form>
         <canvas id="the-canvas" style="border: 1px solid black;"></canvas>
+        <div>
+            <button id="prev" onclick="goPrevious()">Previous</button>
+            <button id="next" onclick="goNext()">Next</button>
+            &nbsp; &nbsp;
+            <span>Page: <span id="page_num"></span> / <span id="page_count"></span></span>
+        </div>
         <script>
             document.onload = renderDoc('/Docat/document/download/${documentInstance?.id}')
         </script>
