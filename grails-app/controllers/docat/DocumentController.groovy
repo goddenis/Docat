@@ -36,10 +36,13 @@ class DocumentController {
 
         if (!documentInstance.save(flush: true)) {
             render(view: "create", model: [documentInstance: documentInstance])
+
             return
         }
 
-
+        if (documentInstance.attachedFileName) {
+           // processingService.updateIndexedFile(documentInstance)
+        }
 
         flash.message = "Документ ${documentInstance.id}."
         redirect(action: "show", id: documentInstance.id)
@@ -64,7 +67,7 @@ class DocumentController {
 
 
             if (fileBytes?.length > 0) {
-                forceDownload(filename:"${docInstance.name.replace(' ','_')}.pdf", contentType:"application/octet-stream", contentLength: fileBytes.length, fileBytes)
+                forceDownload(filename: "${docInstance.name.replace(' ', '_')}.pdf", contentType: "application/octet-stream", contentLength: fileBytes.length, fileBytes)
                 //render(contentType: "application/octet-stream",header("Content-disposition", "filename=${docInstance.attachedFileName}"), outputStrem:fileBytes )
 
             }
@@ -77,7 +80,7 @@ class DocumentController {
     def edit(Long id) {
         def documentInstance = Document.get(id)
         if (!documentInstance) {
-            flash.message ="Документ ${id} не найден"
+            flash.message = "Документ ${id} не найден"
             redirect(action: "list")
             return
         }
@@ -117,8 +120,10 @@ class DocumentController {
             render(view: "edit", model: [documentInstance: documentInstance])
             return
         }
-
-        flash.message ="Документ ${documentInstance.id} Обновлен"
+        if (documentInstance.attachedFileName) {
+            //processingService.updateIndexedFile(documentInstance)
+        }
+        flash.message = "Документ ${documentInstance.id} Обновлен"
         redirect(action: "show", id: documentInstance.id)
     }
 
@@ -126,14 +131,14 @@ class DocumentController {
     def delete(Long id) {
         def documentInstance = Document.get(id)
         if (!documentInstance) {
-            flash.message ="Документ ${id} не найден"
+            flash.message = "Документ ${id} не найден"
             redirect(action: "list")
             return
         }
 
         try {
             documentInstance.delete(flush: true)
-            flash.message ="Документ ${id} удален"
+            flash.message = "Документ ${id} удален"
             redirect(action: "list")
         }
         catch (DataIntegrityViolationException e) {

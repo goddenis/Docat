@@ -1,3 +1,5 @@
+import docat.SolrIndexListener
+
 import java.util.concurrent.ForkJoinPool;
 
 import docat.DocCategory
@@ -7,7 +9,6 @@ import docat.User
 import docat.UserRole
 
 class BootStrap {
-
     def init = { servletContext ->
 
         def category1 = new DocCategory(name: 'Категория 1')
@@ -45,6 +46,7 @@ class BootStrap {
         testUser.save(flush: true)
 
         UserRole.create testUser, adminRole, true
+
     }
     def destroy = {
     }
