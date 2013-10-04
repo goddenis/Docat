@@ -1,7 +1,7 @@
 package docat
 
 class DocCategory {
-
+    static def solarable = false
 	String name
 	
 	@Override

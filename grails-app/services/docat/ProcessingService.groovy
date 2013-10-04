@@ -1,22 +1,24 @@
 package docat
 
+import docat.anotations.SolrExtractable
 import grails.converters.JSON
-import grails.web.JSONBuilder
 import groovyx.net.http.ContentType
 import groovyx.net.http.HTTPBuilder
 import groovyx.net.http.HttpResponseException
 import groovyx.net.http.Method
-import org.apache.http.HttpEntity
 import org.apache.http.entity.InputStreamEntity
-import org.apache.solr.client.solrj.impl.CommonsHttpSolrServer
+import org.apache.solr.client.solrj.impl.HttpSolrServer
+import org.apache.solr.client.solrj.request.ContentStreamUpdateRequest
 import org.apache.solr.client.solrj.request.UpdateRequest
 import org.apache.solr.common.SolrInputDocument
-import org.codehaus.groovy.grails.commons.GrailsClassUtils
+import org.apache.solr.common.util.ContentStreamBase
 import org.codehaus.groovy.grails.web.json.JSONArray
 import org.apache.http.entity.StringEntity
+import org.springframework.beans.BeanUtils
+
+import java.beans.PropertyDescriptor
 
 class ProcessingService {
-    boolean transactional = false
     def grailsApplication
     private def servers = [:]
 
@@ -24,7 +26,7 @@ class ProcessingService {
         def url = grailsApplication.config.devProperties.searchUrl
 
         if (!servers[url]) {
-            servers[url] = new CommonsHttpSolrServer(url)
+            servers[url] = new HttpSolrServer(url)
         }
         return servers[url]
     }
@@ -46,8 +48,8 @@ class ProcessingService {
 
     def reindexEntity(def p) {
 
-        if (p["solarable"]){
-            println( "solrable")
+        if (p["solrable"]) {
+            println("solrable")
         }
 
     }
@@ -202,10 +204,51 @@ class ProcessingService {
 
     }
 
-    def indexEntity(def p) {
-        println p
+    def indexEntity(Object p) {
+        if (!p.getProperties()["solrable"])
+            return false
+
+        if (!p.getProperties()["attachedFileName"])
+            return indexSimpleDoc(p)
+        else
+            return indexDocWithExtraction(p)
     }
 
+    def indexDocWithExtraction(def p) {
+        def serv = getServer()
+
+        def fileId = p.getProperties()["attachedFileName"]
+
+        def f = new File(
+                grailsApplication.config.devProperties.storeFolder + "\\" + fileId
+        )
+        def req = new ContentStreamUpdateRequest(grailsApplication.config.devProperties.extractPath)
+        req.setParam("literal.id", fileId)
+        req.addContentStream(new ContentStreamBase.FileStream(f))
+        req.setParam("commit","true")
+        def ret = serv.request(req)
+
+        def indoc = new SolrInputDocument()
+        indoc.addField("id", fileId.toString())
+
+        indoc.addField("entity_s",p.metaClass.toString())
+        indoc.addField("entity_id_i",p.id)
+
+        p.getProperties().each {
+            indoc.addField("${it.key}_et", it.value)
+        }
+
+
+        serv.add(indoc)
+        serv.commit()
+
+        println(ret)
+        return true
+    }
+
+    def indexSimpleDoc(def p) {
+        return true
+    }
 
     def deleteEntity(def p) {
         println p

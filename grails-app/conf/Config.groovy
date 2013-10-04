@@ -102,7 +102,7 @@ devProperties {
     userHome = "${userHome}"
     storeFolder = "${userHome}\\AppStore"
     collection = "collection1"
-    searchUrl = "http://192.168.33.113:8080/solr"
+    searchUrl = "http://192.168.33.52:8080/solr"
     searchPath = "/${collection}/select"
     extractPath = "/update/extract"
     reindexPath = "/${collection}/update"

@@ -10,8 +10,15 @@ import org.junit.*
  */
 @TestFor(SearchController)
 class SearchControllerTests {
-
-    void testSomething() {
-        fail "Implement me"
+    def grailsApplication
+    void testUrlGetTest(){
+        def url=  grailsApplication.config.devProperties.searchurl
+        println url
+        assertTrue("http://192.168.33.52:8080/solr".equals(url))
     }
+
+    void testIndexSimpleDocTest(){
+
+    }
+
 }
